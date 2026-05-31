@@ -1,0 +1,31 @@
+name: BUILD MINIMAL OK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup system
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip python3-pip build-essential
+
+      - name: Install Buildozer
+        run: |
+          pip install --upgrade pip
+          pip install buildozer==1.5.0 cython==0.29.36
+
+      - name: Build APK
+        run: buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK-MINIMAL
+          path: bin/*.apk
